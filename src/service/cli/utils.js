@@ -4,7 +4,6 @@ const moment = require(`moment`);
 const fs = require(`fs`);
 const { TITLES,
         ANNOUNCE,
-        CREATEDDATE,
         CATEGORY,
     } = require(`./data`);
 
@@ -45,7 +44,7 @@ const makeMock = (data) => {
         if (err){ 
             console.error(`Не удалось записать данные в файл`); 
         }
-        console.log(`Файл записан!`); 
+        console.log(`Файл записан!`);
     });
 };
 

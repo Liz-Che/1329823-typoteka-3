@@ -9,16 +9,13 @@ module.exports = {
     run(userIndex) { 
         const [count] = userIndex; 
         if (count > MAX_COUNT) { 
-            console.error(`Не больше ${MAX_COUNT} объявлений`); 
-            process.exit(ExitCode.fail); 
-        } 
-        const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT; 
-        const content = JSON.stringify(generateOffers(countOffer));
-        makeMock(content);
-        if (!makeMock){
-            console.error(`0`);
+            console.error(`Не больше ${MAX_COUNT} объявлений. Процесс завершен с ошибкой ${ExitCode.error}`); 
+            process.exit(ExitCode.error); 
+        } else {
+            const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT; 
+            const content = JSON.stringify(generateOffers(countOffer));
+            makeMock(content);
+            process.exit(ExitCode.success);
         }
-        console.log(`1`);
-        process.exit(ExitCode.success); 
     } 
 };

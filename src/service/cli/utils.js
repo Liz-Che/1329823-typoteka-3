@@ -32,8 +32,8 @@ const generateOffers = (count) => (
     Array(count).fill({}).map( () => (
         {
             title: TITLES[getReandomInt(0,TITLES.length-1)],
-            announce: shuffle(ANNOUNCE).slice(1,5).join(` `),
-            fullText: shuffle(ANNOUNCE).slice(1).join(` `),
+            announce: shuffle(ANNOUNCE).slice(0,5).join(` `),
+            fullText: shuffle(ANNOUNCE).slice(1,getReandomInt(0, ANNOUNCE.length - 1)).join(` `),
             createdDate: createdRandomDate(),
             category: [CATEGORY[getReandomInt(0,CATEGORY.length-1)]],
         }))

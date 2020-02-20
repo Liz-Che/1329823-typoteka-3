@@ -22,10 +22,9 @@ module.exports = {
             await fs.writeFile(FILE_NAME,content);
             console.log(chalk.green(`Файл записан!`));
             process.exit(ExitCode.success);
-        }
-        catch{
+        } catch {
             console.error(chalk.red(`Не удалось записать данные в файл`));
             process.exit(ExitCode.error);
         }
-    } 
+    }
 };

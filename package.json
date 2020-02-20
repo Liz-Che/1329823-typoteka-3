@@ -4,25 +4,26 @@
   "description": "Типотека",
   "main": "./src/service/service.js",
   "scripts": {
-    "start": "node ./src/service/service.js",
-    "test": "npm run eslint",
-    "eslint": "eslint --ext .js src/"
+  "start": "node ./src/service/service.js",
+  "test": "npm run eslint",
+  "eslint": "eslint --ext .js src/"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Liz-Che/1329823-typoteka-3.git"
+  "type": "git",
+  "url": "git+https://github.com/Liz-Che/1329823-typoteka-3.git"
   },
   "author": "Chachina Elizaveta",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Liz-Che/1329823-typoteka-3/issues"
+  "url": "https://github.com/Liz-Che/1329823-typoteka-3/issues"
   },
   "homepage": "https://github.com/Liz-Che/1329823-typoteka-3#readme",
   "devDependencies": {
-    "eslint": "6.8.0",
-    "eslint-config-htmlacademy": "0.5.2"
+  "eslint": "6.8.0",
+  "eslint-config-htmlacademy": "0.5.2"
   },
   "dependencies": {
-    "moment": "^2.24.0"
+  "chalk": "3.0.0",
+  "moment": "^2.24.0"
   }
 }

@@ -43,11 +43,11 @@ const readContent = async (filePath) => {
 module.exports = { 
   name: `--generate`, 
   async run(userIndex) { 
-    const sentences = await readContent(FILE_SENTENCES_PATH);
-    const titles = await readContent(FILE_TITLES_PATH);
-    const categories = await readContent(FILE_CATEGORIES_PATH);
-
-    Promise.all([sentences, titles, categories]);
+    const [sentences, titles, categories] = await Promise.all([
+      readContent(FILE_SENTENCES_PATH),
+      readContent(FILE_TITLES_PATH),
+      readContent(FILE_CATEGORIES_PATH),
+    ]);
 
     const [count] = userIndex; 
     if (count > MAX_COUNT) { 

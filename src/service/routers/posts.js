@@ -10,7 +10,7 @@ const getPost = async () => JSON.parse((await fs.readFile(MOCK_FILE_NAME)).toStr
 
 postsRouter.get(`/`, async (req, res) => {
   try {
-    res.json(await getPost);
+    res.json(await getPost());
   } catch (err) {
     if (err.code === `ENOENT`) {
       res.status(HttpCode.NOT_FOUND).send([]);

@@ -1,15 +1,18 @@
 'use strict'; 
 
 const {ExitCode, MOCK_FILE_NAME} = require(`../../constants`); 
-const {getReandomInt, shuffle} = require(`../cli/utils`);
+const {getReandomInt, shuffle, newId} = require(`../cli/utils`);
 const chalk = require(`chalk`);
 const moment = require(`moment`); 
 const fs = require(`fs`).promises;
 const DEFAULT_COUNT = 1; 
 const MAX_COUNT = 1000;
+const MAX_COMMENT_COUNT = 8;
+const MAX_COMMENTS_TEXT = 5;
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
 
 const createdRandomDate = () => {
@@ -18,13 +21,22 @@ const createdRandomDate = () => {
   return moment(getReandomInt(threeMonthAgo, dateNow)).format(`YYYY:MM:DD HH:mm:ss`);
 };
 
-const generateOffers = (count, titles, sentences,categories) => (
+const getComments = (count, comments) => {
+  return Array (count).fill({}).map(() => ({
+    id: newId(),
+    text: shuffle(comments).slice(0, getReandomInt(1, MAX_COMMENTS_TEXT)).join(` `),
+  }));
+};
+
+const generateOffers = (count, titles, sentences,categories, comments) => (
   Array(count).fill({}).map( () => ( {
+    id: newId(),
     title: titles[getReandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(0,5).join(` `), 
     fullText: shuffle(sentences).slice(0, getReandomInt(0, sentences.length - 1)).join(` `),
     createdDate: createdRandomDate(),
     category: [categories[getReandomInt(0, categories.length - 1)]],
+    comments: getComments(getReandomInt(1,MAX_COMMENT_COUNT), comments),
   }))
 );
 
@@ -42,10 +54,11 @@ const readContent = async (filePath) => {
 module.exports = { 
   name: `--generate`, 
   async run(userIndex) { 
-    const [sentences, titles, categories] = await Promise.all([
+    const [sentences, titles, categories, comments] = await Promise.all([
       readContent(FILE_SENTENCES_PATH),
       readContent(FILE_TITLES_PATH),
       readContent(FILE_CATEGORIES_PATH),
+      readContent(FILE_COMMENTS_PATH),
     ]);
 
     const [count] = userIndex; 
@@ -55,7 +68,7 @@ module.exports = {
     } 
 
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT; 
-    const content = JSON.stringify(generateOffers(countOffer,titles,sentences,categories));
+    const content = JSON.stringify(generateOffers(countOffer,titles,sentences,categories,comments));
 
     try {
       await fs.writeFile(MOCK_FILE_NAME,content);

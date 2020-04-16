@@ -1,0 +1,41 @@
+GET http://localhost:3000/api/articles HTTP/1.1 
+Content-Type: application/json
+
+####
+POST http://localhost:3000/api/articles HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "PPPPP1", 
+    "title": "Рок — это протест", 
+    "announce": ["Это один из лучших рок-музыкантов.", "Из под его пера вышло 8 платиновых альбомов."], 
+    "fullText": "Программировать не настолько сложно, как об этом говорят. Он написал больше 30 хитов. Рок-музыка всегда ассоциировалась с протестами. Так ли это на самом деле?", 
+    "createdDate": "2020:04:15 05:56:44", 
+    "category": ["За жизнь"], 
+    "comments": [
+        {
+            "id": "PPPOO1", 
+            "text": [
+                "Плюсую, но слишком много буквы!"
+            ]
+        }, 
+        {
+            "id": "PPPOO2", 
+            "text": [
+                "Совсем немного... Cогласен с автором!",
+            ]
+        }
+    ]
+}
+
+###
+DELETE http://localhost:3000/api/articles/0R1UyU HTTP/1.1 
+Content-Type: application/json
+
+###
+GET http://localhost:3000/api/articles/0R1UyU HTTP/1.1 
+Content-Type: application/json
+
+###
+PUT http://localhost:3000/api/articles/0R1UyU HTTP/1.1 
+Content-Type: application/json

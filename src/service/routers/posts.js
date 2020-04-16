@@ -55,6 +55,7 @@ postsRouter.delete(`/:articles/:articleId`, async (req, res) => {
   if (!post) {
     res.status(HttpCode.NO_CONTENT).send(`NO_CONTENT`);
     console.log(chalk.red(`Creative not found or has been removed before`));
+    return;
   }
   res.json({response: `Delete post by id: ${post.id}`});
 });
@@ -63,6 +64,7 @@ postsRouter.get(`/:articleId/comments`, async (req, res) => {
   const post = (await getPost()).find((el) => el.id === req.params.articleId);
   if (!post) {
     res.status(HttpCode.BED_REQUEST).send(`BED_REQUEST`);
+    return;
   }
   res.json(post.comments);
 });

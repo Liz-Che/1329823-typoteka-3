@@ -10,7 +10,7 @@ const initRouter = new Router();
 initRouter.use(`/api/articles`, postsRouter);
 initRouter.use(`/api/categories`, categoriesRouter);
 initRouter.use(`/api/search`, searchRouter);
-initRouter.get(`*`, (req, res) => {
+initRouter.use((req, res) => {
   res.status(HttpCode.NOT_FOUND).send(`Not found page`);
 });
 

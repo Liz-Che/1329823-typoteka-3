@@ -1,7 +1,7 @@
 'use strict'; 
 
 const {ExitCode, MOCK_FILE_NAME} = require(`../../constants`); 
-const {getReandomInt, shuffle, newId} = require(`../cli/utils`);
+const {getReandomInt, shuffle, getNewId} = require(`../cli/utils`);
 const chalk = require(`chalk`);
 const moment = require(`moment`); 
 const fs = require(`fs`).promises;
@@ -23,14 +23,14 @@ const createdRandomDate = () => {
 
 const getComments = (count, comments) => {
   return Array (count).fill({}).map(() => ({
-    id: newId(),
+    id: getNewId(),
     text: shuffle(comments).slice(0, getReandomInt(1, MAX_COMMENTS_TEXT)).join(` `),
   }));
 };
 
 const generateOffers = (count, titles, sentences,categories, comments) => (
   Array(count).fill({}).map( () => ( {
-    id: newId(),
+    id: getNewId(),
     title: titles[getReandomInt(0, titles.length - 1)],
     announce: shuffle(sentences).slice(0,5).join(` `), 
     fullText: shuffle(sentences).slice(0, getReandomInt(0, sentences.length - 1)).join(` `),

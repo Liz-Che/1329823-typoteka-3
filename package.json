@@ -4,14 +4,15 @@
   "description": "Типотека",
   "main": "./src/service/service.js",
   "scripts": {
-    "start": "set LOG_LEVEL=error && npm run server > src/service/logs/info.log 2> src/service/logs/error.log",
+    "start": "set LOG_LEVEL=error && npm run server > src/service/logs/info.log > src/service/logs/error.log",
     "start::debug": "set LOG_LEVEL=debug && npm run server | pino-pretty > src/service/logs/app.log 2> src/service/logs/error.log",
-    "server": "nodemon ./src/service/service.js",
+    "server": "nodemon ./src/service/service.js --server 3000",
     "test": "npm run test::rest",
     "test::rest": "jest",
     "test::eslint": "npm run eslint",
     "start-front-server": "nodemon ./src/express/index.js",
-    "eslint": "eslint --ext .js src/"
+    "eslint": "eslint --ext .js src/",
+    "api-server": "concurrently \"npm run server\" \"npm run start-front-server\" "
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/Liz-Che/1329823-typoteka-3#readme",
   "devDependencies": {
+    "axios": "0.19.2",
     "eslint": "6.8.0",
     "eslint-config-htmlacademy": "0.5.2",
     "jest": "25.4.0",
@@ -31,12 +33,18 @@
     "nodemon": "2.0.2",
     "pino-pretty": "4.0.0",
     "pug-lint": "2.6.0",
-    "supertest": "4.0.2"
+    "request": "2.88.2",
+    "supertest": "4.0.2",
+    "test": "0.6.0"
   },
   "dependencies": {
     "chalk": "3.0.0",
+    "concurrently": "5.2.0",
     "express": "4.17.1",
-    "moment": "^2.24.0",
+    "express-pino-logger": "5.0.0",
+    "express-validator": "6.6.0",
+    "moment": "2.27.0",
+    "multer": "1.4.2",
     "pino": "6.2.0",
     "pug": "2.0.4"
   }

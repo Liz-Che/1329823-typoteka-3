@@ -1,17 +1,34 @@
 'use strict';
 
-const fs = require(`fs`).promises;
 const request = require(`supertest`);
-const server = require(`./index`);
-const {MOCK_FILE_NAME} = require(`../../constants`);
+const {getServer} = require(`../api/api-server`);
+const {HttpCode} = require(`../../constants`);
+const {getMockData} = require(`../lib/get-mock-data`);
+
+let server;
+let mockData;
+
+beforeAll(async () => {
+  server = await getServer();
+  mockData = await getMockData();
+});
 
 describe(`Check REST API to work with search`, () => {
-  let mockOffer = null;
-  beforeAll(async () => {
-    mockOffer = JSON.parse((await fs.readFile(MOCK_FILE_NAME)).toString())[0];
+
+  test(`Get empty article array`, async () => {
+    const res = await request(server).get(`api/search`).query({query: `Text test`});
+    expect(res.statusCode).toBe(HttpCode.OK);
   });
-  test(`Search posts`, async () => {
-    const res = await request(server).get(`/api/search?query=${encodeURIComponent(mockOffer.title)}`);
-    expect(res.statusCode).toBe(200);
+
+  test(`Get searched articles array`, async () => {
+    const articleTitle = mockData[0].title;
+    const res = await request(server).get(`api/search`).query({query: articleTitle});
+    expect(res.statusCode).toBe(HttpCode.OK);
   });
+
+  test(`Search ends with status code 400`, async () => {
+    const res = await request(server).get(`api/search`).query({param: `Сдам`});
+    expect(res.statusCode).toBe(HttpCode.BAD_REQUEST);
+  });
+
 });

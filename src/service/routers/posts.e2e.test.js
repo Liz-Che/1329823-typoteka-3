@@ -11,6 +11,7 @@ const newPostData = {
   fullText: `Тяжело найти качественную музыку`,
   createdDate: `2020-05-07 02:23`,
   category: [`Музыка`],
+  picture: ``,
   comments: []
 };
 
@@ -20,6 +21,17 @@ const updatedPostData = {
   fullText: `Тяжело найти хороший б/у автомобиль`,
   createdDate: `2020-04-07 20:25`,
   category: [`Авто`],
+  picture: ``,
+  comments: []
+};
+
+
+const incorrectPostData = {
+  announce: `Простые ежедневные упражнения помогут достичь успеха.`,
+  fullText: `Тяжело найти качественную музыку`,
+  createdDate: `2020-04-17 30:25`,
+  category: [`Тесты`],
+  picture: ``,
   comments: []
 };
 
@@ -64,15 +76,15 @@ describe(`Check REST API to work with article`, () => {
     });
 
     test(`Creating a new article without`, async () => {
-      const res = await request(server).post(`/api/articles`).send({});
-      expect(res.statusCode).toBe(HttpCode.BAD_REQUEST);
+      const res = await request(server).post(`/api/articles`).send(incorrectPostData);
+      expect(res.statusCode).toBe(400);
     });
   });
 
   describe(`Get article comments`, () => {
 
     test(`Getting comments from the article`, async () => {
-      const articleId = mockData[0].id;
+      const articleId = mockData[3].id;
       const res = await request(server).get(`/api/articles/${articleId}/comments`);
       expect(res.statusCode).toBe(HttpCode.OK);
     });
@@ -80,7 +92,7 @@ describe(`Check REST API to work with article`, () => {
     test(`Getting comments from nonexistent offer`, async () => {
       const articleId = `000fff`;
       const res = await request(server).get(`/api/articles/${articleId}/comments`);
-      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+      expect(res.statusCode).toBe(HttpCode.BED_REQUEST);
     });
   });
 
@@ -97,7 +109,7 @@ describe(`Check REST API to work with article`, () => {
       const articleId = mockData[0].id;
       const commentData = {message: `New test comment`};
       const res = await request(server).post(`/api/articles/${articleId}/comments`).send(commentData);
-      expect(res.statusCode).toBe(HttpCode.BAD_REQUEST);
+      expect(res.statusCode).toBe(HttpCode.BED_REQUEST);
     });
 
     test(`Creating new comment at nonexistent offer`, async () => {
@@ -144,7 +156,7 @@ describe(`Check REST API to work with article`, () => {
     test(`Update offer without data`, async () => {
       const articleId = mockData[0].id;
       const res = await request(server).put(`/api/articles/${articleId}`).send({});
-      expect(res.statusCode).toBe(HttpCode.BAD_REQUEST);
+      expect(res.statusCode).toBe(400);
     });
 
     test(`Update nonexistent offer`, async () => {
@@ -158,7 +170,7 @@ describe(`Check REST API to work with article`, () => {
     test(`Delete article`, async () => {
       const articleId = mockData[0].id;
       const res = await request(server).delete(`/api/articles/${articleId}`);
-      expect(res.statusCode).toBe(HttpCode.SUCCESS);
+      expect(res.statusCode).toBe(HttpCode.OK);
     });
 
     test(`Delete nonexistent article`, async () => {

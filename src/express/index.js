@@ -6,7 +6,7 @@ const path = require(`path`);
 const logger = require(`../service/logger`).getLogger();
 const {createAPI} = require(`./axios`);
 const ApiService = require(`./api-service/service`);
-const {getMainRouter, getMyRouter, getOffersRouter} = require(`./routers`);
+const {getMainRouter, getMyRouter, getPostsRouter, getCategoriesRouter} = require(`./routers`);
 const DEFAULT_PORT = 8080;
 
 const service = new ApiService(createAPI());
@@ -24,7 +24,8 @@ app.use((req, res, next) => {
 
 app.use(`/`, getMainRouter(service));
 app.use(`/my`, getMyRouter(service));
-app.use(`/offers`, getOffersRouter(service));
+app.use(`/articles`, getPostsRouter(service));
+app.use(`/categoties`, getCategoriesRouter(service));
 
 app.use((req, res) => {
   res.status(HttpCode.NOT_FOUND).send(`Not found page`).render(`errors/400`);

@@ -18,15 +18,15 @@ const getMyRouter = (service) => {
       const posts = await service.getAllPost();
       const postComments = await Promise.all(
           posts.slice(0, 3)
-          .map((post) => service.getPostComments(post.id))
+         .map((post) => service.getPostComments(post.id))
       );
       return res.render(`publication/comments`, {comments: postComments.flat()});
     } catch (err) {
       return next(err);
     }
   });
-  return myRouter;
 
+  return myRouter;
 };
 
 module.exports = {getMyRouter};

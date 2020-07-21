@@ -19,7 +19,7 @@ class ApiService {
   async searchPost(query) {
     return await this._api.get(`/search?query=${encodeURI(query)}`);
   }
-  async getArticleComments(articleId) {
+  async getPostComments(articleId) {
     return await this._api.get(`/articles/${articleId}/comments`);
   }
 }

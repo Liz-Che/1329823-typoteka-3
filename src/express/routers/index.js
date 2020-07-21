@@ -2,10 +2,12 @@
 
 const {getMainRouter} = require(`./main`);
 const {getMyRouter} = require(`./my`);
-const {getOffersRouter} = require(`./offers`);
+const {getPostsRouter} = require(`./offers`);
+const {getCategoriesRouter} = require(`./categories`);
 
 module.exports = {
   getMainRouter,
   getMyRouter,
-  getOffersRouter
+  getPostsRouter,
+  getCategoriesRouter
 };

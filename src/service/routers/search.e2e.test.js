@@ -16,19 +16,19 @@ beforeAll(async () => {
 describe(`Check REST API to work with search`, () => {
 
   test(`Get empty article array`, async () => {
-    const res = await request(server).get(`api/search`).query({query: `Text test`});
+    const res = await request(server).get(`/api/search`).query({query: `Text test`});
     expect(res.statusCode).toBe(HttpCode.OK);
   });
 
   test(`Get searched articles array`, async () => {
-    const articleTitle = mockData[0].title;
-    const res = await request(server).get(`api/search`).query({query: articleTitle});
+    const articleTitle = mockData[5].title;
+    const res = await request(server).get(`/api/search`).query({query: articleTitle});
     expect(res.statusCode).toBe(HttpCode.OK);
   });
 
   test(`Search ends with status code 400`, async () => {
-    const res = await request(server).get(`api/search`).query({param: `Сдам`});
-    expect(res.statusCode).toBe(HttpCode.BAD_REQUEST);
+    const res = await request(server).get(`/api/search`).query({param: `Сдам`});
+    expect(res.statusCode).toBe(400);
   });
 
 });

@@ -49,6 +49,7 @@ const getServer = async () => {
       message: notFoundMessageText
     });
   });
+
   return server;
 };
 

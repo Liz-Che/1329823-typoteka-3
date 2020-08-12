@@ -30,10 +30,11 @@ const getMainRouter = (service) => {
         return res.render(`main/search`);
       }
       const searchResult = await service.searchPost(query);
-      const posts = await service.getAllPost();
+      //const posts = await service.getAllPost();
       return res.render(`main/search`, {
         posts: searchResult,
-        mostDiscussedOffers: getMostDiscussedPost(posts)
+        query
+        //mostDiscussedOffers: getMostDiscussedPost(posts)
       });
     } catch (err) {
       return next(err);

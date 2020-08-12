@@ -63,7 +63,7 @@ const getPostRouter = (postService, commentService) => {
     return res.status(HttpCode.OK).json(formatArticleDate(post));
   });
 
-  postsRouter.get(`/:articleId/comments`, commentValidator, (req, res) => {
+  postsRouter.get(`/:articleId/comments`, (req, res) => {
     const {articleId} = req.params;
     const post = postService.findOne(articleId);
     if (!post) {

@@ -11,12 +11,14 @@ const DEFAULT_PORT = 8080;
 
 const service = new ApiService(createAPI());
 const app = express();
+
 const STATIC_DIR = path.join(__dirname, `public`);
 app.set(`views`, path.join(__dirname, `templates`));
 app.set(`view engine`, `pug`);
 
 app.use(express.static(STATIC_DIR));
 app.use(express.json());
+
 app.use((req, res, next) => {
   logger.debug(`Router request: ${req.url}`);
   next();

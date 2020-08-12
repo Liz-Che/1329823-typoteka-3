@@ -1,21 +1,22 @@
 extends ../layout/layout.pug
 block content
 
-  main.main-page.main-page--padding
+main.main-page.main-page--padding
     section.main-page__publication.publication
       h1.publication__title Комментарии
-      if comments.length > 0
+      if userArticlesWithComments.length > 0
         ul.publication__list
-          each comment in comments
-            li.publication__list-item
-              .publication__header
-                img.publication__list-image(src='img/avatar-small-2.png', width='20', height='20', alt='Аватар пользователя')
-                b.publication__list-name Александр Петров
-                time.publication__item-time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
-              a.publication__item-text(href='#')
-                | Главреды «Дождя», Forbes и других СМИ попросили Роскомнадзор разъяснить штрафы за ссылки на сайты.
-              p.publication__text-strong= comment.text
-              button.publication__button.button.button--close-item(type='button')
-                span.visually-hidden Закрыть строку списка
-      else
-        p ...пока нет ни одного комментария
+          each article in userArticlesWithComments
+            each comment in article.comments
+              li.publication__list-item
+                .publication__header
+                  img.publication__list-image(src='img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
+                  b.publication__list-name Александр Петров
+                  time.publication__item-time(datetime=comment.createdDate)= comment.createdDate
+                a.publication__item-text(href=`/articles/${article.id}`)= article.title
+                p.publication__text-strong= comment.text
+                form(action=`/articles/comments/delete/${comment.id}` method="POST")
+                  button.publication__button.button.button--close-item(type='submit')
+                    span.visually-hidden Закрыть строку списка
+            else
+              p ...пока нет ни одного комментария

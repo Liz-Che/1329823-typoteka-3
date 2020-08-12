@@ -92,7 +92,7 @@ describe(`Check REST API to work with article`, () => {
     test(`Getting comments from nonexistent offer`, async () => {
       const articleId = `000fff`;
       const res = await request(server).get(`/api/articles/${articleId}/comments`);
-      expect(res.statusCode).toBe(HttpCode.BED_REQUEST);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
     });
   });
 

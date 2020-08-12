@@ -8,10 +8,10 @@ const getSearchRouter = (searchService) => {
   searchRouter.get(`/`, (req, res) => {
     const {query} = req.query;
     if (typeof (query) === `undefined`) {
-      return res.status(HttpCode.BAD_REQUEST)
+      return res.status(HttpCode.BED_REQUEST)
       .json({
         error: true,
-        status: HttpCode.BAD_REQUEST,
+        status: HttpCode.BED_REQUEST,
         message: `Incorrect data sent`
       });
     }

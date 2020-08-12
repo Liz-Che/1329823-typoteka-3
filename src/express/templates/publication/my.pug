@@ -4,10 +4,14 @@ block content
   main.main-page.main-page--padding
     section.main-page__notes.notes
       h1.notes__title Мои записи
-      ul.notes__list
-       each article in articles
-          li.notes__list-item
-            time.notes__item-time(datetime='2019')= article.createdDate
-            a.notes__item-text(href=`/articles/${article.id}`)= article.title
-            button.notes__button.button.button--close-item(type='button')
-              span.visually-hidden Закрыть строку списка
+      if articles && articles.length > 0
+        ul.notes__list
+          each article in articles
+            li.notes__list-item
+              time.notes__item-time(datetime=article.createdDate)= article.createdDate
+              a.notes__item-text(href=`/articles/edit/${article.id}`)= article.title
+              form(action=`/articles/${article.id}/delete` method='POST')
+                button.notes__button.button.button--close-item(type='submit')
+                  span.visually-hidden Закрыть строку списка
+      else
+        p Здесь пока ничего нет...

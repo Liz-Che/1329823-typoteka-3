@@ -1,10 +1,13 @@
 extends ../layout/layout.pug
+include ../layout/categories.pug
+include ../layout/articles-list.pug
+include ../layout/pagination.pug
 block content
 
   main.main-page
     h1.visually-hidden Главная страница личного блога Типотека
-    p.
-      Это приветственный текст, который владелец блога может выбрать, чтобы описать себя 👏
+    p
+      | Это приветственный текст, который владелец блога может выбрать, чтобы описать себя 👏
     if !articles || articles.length === 0
       .main-page__empty-wrapper
           p.main-page__empty-text
@@ -13,43 +16,33 @@ block content
       +categories(categories)
       .main-page__section-flex
         section.main-page__hot.hot
-          h2(class=`${mostDiscussedPost.length > 0 ? 'hot__name' : 'hot__name hot__name--empty'} `) Самое обсуждаемое&nbsp;
+          h2(class=`${mostDiscussedArticles.length > 0 ? 'hot__name' : 'hot__name hot__name--empty'} `) Самое обсуждаемое&nbsp;
             span.hot__icon.hot__icon--fire
-          if mostDiscussedPost.length > 0
+          if mostDiscussedArticles.length > 0
             ul.hot__list
-              each article in mostDiscussedPost
+              each article in mostDiscussedArticles
                 li.hot__list-item
-                  a.hot__list-link(href=`/article/${article.id}`)= article.title
-                    sup.hot__link-sup= ` ${article.comments.length}`
+                  a.hot__list-link(href=`/articles/${article.id}`)= truncateText(article.announce, 100)
+                    sup.hot__link-sup= ` ${article.commentsCount}`
           else
             p.hot__empty Здесь пока ничего нет...
         section.main-page__last.last
           h2.last__name
             | Последние комментарии&nbsp;
             span.last__icon.last__icon--cloud
-          ul.last__list
-            li.last__list-item
-              img.last__list-image(src='img/avatar-small-1.png', width='20', height='20', alt='Аватар пользователя')
-              b.last__list-name Анна Артамонова
-              a.last__list-link(href='#')
-                | Сервис аренды жилья Airbnb стал глобальным партнером Международного
-                | олимпийского комитета
-                | (МОК) на девять лет, в течение которых пройдет пять Олимпиад, в том числе в Токио в 2020 году.
-            li.last__list-item
-              img.last__list-image(src='img/avatar-small-2.png', width='20', height='20', alt='Аватар пользователя')
-              b.last__list-name Александр Петров
-              a.last__list-link(href='#')
-                | Главреды «Дождя», Forbes и других СМИ попросили Роскомнадзор
-                | разъяснить штрафы за ссылки на
-                | сайты с матом
-            li.last__list-item.last__list-item--end
-              img.last__list-image(src='img/avatar-small-3.png', width='20', height='20', alt='Аватар пользователя')
-              b.last__list-name Игорь Шманский
-              a.last__list-link(href='#')
-                | Что-то все электрокары в последнее время все на одно лицо
-                | делаются))
+          if lastComments.length > 0
+            ul.last__list
+              each comment in lastComments
+                li.last__list-item
+                  img.last__list-image(src=`img/${comment.users.avatar}` width='20' height='20' alt='Аватар пользователя')
+                  b.last__list-name= `${comment.users.firstname} ${comment.users.lastname}`
+                  a.last__list-link(href=`/articles/${comment.articleId}/#comments`)= truncateText(comment.text, 100)
+          else
+            p.hot__empty Здесь пока ничего нет...
       section.main-page__list.preview
         h2.visually-hidden Список превью статей
         ul.preview__list
           each article in articles
             +articles-list(article)
+      if pagesCount > 1
+        +pagination(pagesCount, activePage, template, activeCategory)

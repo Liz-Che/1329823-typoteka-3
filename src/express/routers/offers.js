@@ -19,7 +19,7 @@ const getPostsRouter = (service) => {
   offersRouter.get(`/add`, async (req, res, next) => {
     try {
       const categories = await service.getAllCategories();
-      return res.render(`main/all-categories`, {categories});
+      return res.render(`publication/new-post`, {categories});
     } catch (err) {
       return next(err);
     }
@@ -35,7 +35,7 @@ const getPostsRouter = (service) => {
       };
 
       const file = req.file;
-      let formFieldsData = req.body;
+      let formFieldsData = {...req.body};
       if (file && (!FILE_TYPES.includes(file.mimetype) || file.size > MAX_PICTURE_SIZE)) {
         errors.errorsList.push(fileErrorMsg);
         errors.errorByField.picture = {msg: fileErrorMsg};

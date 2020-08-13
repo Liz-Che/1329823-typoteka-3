@@ -1,9 +1,32 @@
 'use strict';
 
 const {Router} = require(`express`);
-const myRouter = new Router();
 
-myRouter.get(`/`, (req, res) => res.render(`publication/my`));
-myRouter.get(`/comments`, (req, res) => res.render(`publication/comments`));
+const getMyRouter = (service) => {
+  const myRouter = new Router();
+  myRouter.get(`/`, async (req, res, next) => {
+    try {
+      const posts = await service.getAllPost();
+      return res.render(`publication/my`, {posts});
+    } catch (err) {
+      return next(err);
+    }
+  });
 
-module.exports = myRouter;
+  myRouter.get(`/comments`, async (req, res, next) => {
+    try {
+      const posts = await service.getAllPost();
+      const postComments = await Promise.all(
+          posts.slice(0, 3)
+         .map((post) => service.getPostComments(post.id))
+      );
+      return res.render(`publication/comments`, {comments: postComments.flat()});
+    } catch (err) {
+      return next(err);
+    }
+  });
+
+  return myRouter;
+};
+
+module.exports = {getMyRouter};

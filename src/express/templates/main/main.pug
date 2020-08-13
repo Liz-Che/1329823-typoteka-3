@@ -1,144 +1,48 @@
 extends ../layout/layout.pug
+include ../layout/categories.pug
+include ../layout/articles-list.pug
+include ../layout/pagination.pug
 block content
 
   main.main-page
     h1.visually-hidden Главная страница личного блога Типотека
-    p.
-      Это приветственный текст, который владелец блога может выбрать, чтобы описать себя 👏
-    section.main-page__theme-list
-      h2.visually-hidden Список тем
-      ul.themes
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Автомобили 
-            sup 88
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Удаленная работа 
-            sup 13
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Бизнес 
-            sup 13
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Путешествия 
-            sup 13
-        li.themes__item
-          a.themes__item-link.themes__item-link--padding(href='#')
-            | Дизайн и обустройство 
-            sup 13
-        li.themes__item
-          a.themes__item-link(href='#')
-            | Производство игрушек 
-            sup 22
-        li.themes__item
-          a.themes__item-link(href='#')
-            | UX & UI 
-            sup 22
-    .main-page__section-flex
-      section.main-page__hot.hot
-        h2.hot__name
-          | Самое обсуждаемое 
-          span.hot__icon.hot__icon--fire
-        ul.hot__list
-          li.hot__list-item
-            a.hot__list-link(href='#')
-              | Билл Гейтс впервые за два года возглавил рейтинг самых богатых людей мира по версии Bloomberg 
-              sup.hot__link-sup 12
-          li.hot__list-item
-            a.hot__list-link(href='#')
-              | Сервис для аналитики Telegram-чатов Combot попал под блокировку из-за информации на служебной 
-              sup.hot__link-sup 15
-              |  странице
-
-          li.hot__list-item.hot__list-item--margin
-            a.hot__list-link(href='#')
-              | Модель Кайли Дженнер продаст 51% своей компании Kylie Cosmetics владельцу Factor за $600 млн 
-              sup.hot__link-sup 52
-          li.hot__list-item.hot__list-item--end
-            a.hot__list-link(href='#')
-              | Tesla получила 146 тысяч предзаказов на электрический пикап Cybertruck за двое суток 
-              sup.hot__link-sup 153
-      section.main-page__last.last
-        h2.last__name
-          | Последние комментарии 
-          span.last__icon.last__icon--cloud
-        ul.last__list
-          li.last__list-item
-            img.last__list-image(src='img/avatar-small-1.png' width='20' height='20' alt='Аватар пользователя')
-            b.last__list-name Анна Артамонова
-            a.last__list-link(href='#') Сервис аренды жилья Airbnb стал глобальным партнером Международного олимпийского комитета (МОК) на девять лет, в течение которых пройдет пять Олимпиад, в том числе в Токио в 2020 году.
-          li.last__list-item
-            img.last__list-image(src='img/avatar-small-2.png' width='20' height='20' alt='Аватар пользователя')
-            b.last__list-name Александр Петров
-            a.last__list-link(href='#') Главреды «Дождя», Forbes и других СМИ попросили Роскомнадзор разъяснить штрафы за ссылки на сайты с матом
-          li.last__list-item.last__list-item--end
-            img.last__list-image(src='img/avatar-small-3.png' width='20' height='20' alt='Аватар пользователя')
-            b.last__list-name Игорь Шманский
-            a.last__list-link(href='#') Что-то все электрокары в последнее время все на одно лицо делаются))
-    section.main-page__list.preview
-      h2.visually-hidden Список превью статей
-      ul.preview__list
-        li.preview__item
-          ul.preview__breadcrumbs
-            li.preview__breadcrumbs-item
-              a.preview__breadcrumbs-link(href='#') Дизайн
-            li.preview__breadcrumbs-item
-              a.preview__breadcrumbs-link(href='#') Удаленная работа
-          .preview__background
-            img.preview__background-image(src='img/skyscraper@1x.jpg' width='460' height='240' srcset='img/skyscraper@1x.jpg, img/skyscraper@2x.jpg 2x' alt='Фотография небоскреба')
-          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
-          h3.preview__name
-            a.preview__name-link(href='#') Я ничего не понял
-          p.preview__text Если вы сами пишете такие письма — почитайте Ильяхова. А в этой заметке я расскажу про заклинание, которое от таких писем помогает.
-          a.preview__comment(href='#')
-            | Комментарии 
-            span.preview__cloud
-            |  
-            b.preview__comment-count 12
-        li.preview__item
-          ul.preview__breadcrumbs
-            li.preview__breadcrumbs-item
-              a.preview__breadcrumbs-link(href='#') Фриланс
-          .preview__background
-            img.preview__background-image(src='img/sea@1x.jpg' width='460' height='240' srcset='img/sea@1x.jpg, img/sea@2x.jpg 2x' alt='Фотография моря')
-          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
-          h3.preview__name
-            a.preview__name-link(href='#') Путешествие в Голландию
-          p.preview__text Если вы сами пишете такие письма — почитайте Ильяхова. А в этой заметке я расскажу про заклинание, которое от таких писем помогает.
-          a.preview__comment(href='#')
-            | Комментарии 
-            span.preview__cloud
-            |  
-            b.preview__comment-count 12
-        li.preview__item.preview__item--noimage
-          ul.preview__breadcrumbs
-            li.preview__breadcrumbs-item
-              a.preview__breadcrumbs-link(href='#') Фриланс
-          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
-          h3.preview__name
-            a.preview__name-link(href='#') Путин подписал закон о предустановке российских приложений на смартфоны и другую электронику
-          p.preview__text Президент России Владимир Путин подписал закон об обязательной предустановке российского программного обеспечения на электронную технику, продаваемую в России. Документ опубликован на официальном сайте правовой информации.
-          a.preview__comment(href='#')
-            | Комментарии 
-            span.preview__cloud
-            |  
-            b.preview__comment-count 12
-        li.preview__item
-          ul.preview__breadcrumbs
-            li.preview__breadcrumbs-item
-              a.preview__breadcrumbs-link(href='#') Дизайн
-            li.preview__breadcrumbs-item
-              a.preview__breadcrumbs-link(href='#') Удаленная работа
-          .preview__background
-            img(src='img/forest@1x.jpg' width='460' height='240' srcset='img/forest@1x.jpg, img/forest@2x.jpg 2x' alt='Фотография леса')
-          time.preview__time(datetime='2019-03-21T20:33') 21.03.2019, 20:33
-          h3.preview__name
-            a.preview__name-link(href='#') Я понял, но не все
-          p.preview__text Если вы сами пишете такие письма — почитайте Ильяхова. А в этой заметке я расскажу про заклинание, которое от таких писем помогает.
-          a.preview__comment(href='#')
-            | Комментарии 
-            span.preview__cloud
-            |  
-            b.preview__comment-count 12
+    p
+      | Это приветственный текст, который владелец блога может выбрать, чтобы описать себя 👏
+    if !articles || articles.length === 0
+      .main-page__empty-wrapper
+          p.main-page__empty-text
+            | Здесь пока пусто!
+    else
+      +categories(categories)
+      .main-page__section-flex
+        section.main-page__hot.hot
+          h2(class=`${mostDiscussedArticles.length > 0 ? 'hot__name' : 'hot__name hot__name--empty'} `) Самое обсуждаемое&nbsp;
+            span.hot__icon.hot__icon--fire
+          if mostDiscussedArticles.length > 0
+            ul.hot__list
+              each article in mostDiscussedArticles
+                li.hot__list-item
+                  a.hot__list-link(href=`/articles/${article.id}`)= truncateText(article.announce, 100)
+                    sup.hot__link-sup= ` ${article.commentsCount}`
+          else
+            p.hot__empty Здесь пока ничего нет...
+        section.main-page__last.last
+          h2.last__name
+            | Последние комментарии&nbsp;
+            span.last__icon.last__icon--cloud
+          if lastComments.length > 0
+            ul.last__list
+              each comment in lastComments
+                li.last__list-item
+                  img.last__list-image(src=`img/${comment.users.avatar}` width='20' height='20' alt='Аватар пользователя')
+                  b.last__list-name= `${comment.users.firstname} ${comment.users.lastname}`
+                  a.last__list-link(href=`/articles/${comment.articleId}/#comments`)= truncateText(comment.text, 100)
+          else
+            p.hot__empty Здесь пока ничего нет...
+      section.main-page__list.preview
+        h2.visually-hidden Список превью статей
+        ul.preview__list
+          each article in articles
+            +articles-list(article)
+      if pagesCount > 1
+        +pagination(pagesCount, activePage, template, activeCategory)

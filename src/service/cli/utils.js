@@ -1,6 +1,7 @@
 'use strict';
 
 const nanoId = require(`nanoid`);
+const moment = require(`moment`);
 
 const getReandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -16,8 +17,35 @@ const shuffle = (array) => {
   return array;
 };
 
-const newId = () => {
+const getNewId = () => {
   return nanoId(6);
 };
 
-module.exports = {getReandomInt, shuffle, newId};
+const getMostDiscussedPost = (offers) => {
+  return offers.filter((offer) => offer.comments.length > 0).sort((a, b) => b.comments.length - a.comments.length).slice(0, 8);
+};
+
+const convertDate = (dateToCheck) => {
+  const date = moment(dateToCheck, `DD.MM.YYYY`);
+  if (date.isSame(moment(), `day`, `month`, `year`)) {
+    return moment.utc().format();
+  }
+  return moment.utc(date).format();
+};
+
+const copyObject = (obj) => JSON.parse(JSON.stringify(obj));
+
+const formatArticleDate = (articleData) => {
+  const DATE_FORMAT = `DD.MM.YYYY, HH:mm`;
+  const makeDateFormat = (date) => moment(date).format(DATE_FORMAT);
+  if (Array.isArray(articleData)) {
+    const newArticleList = copyObject(articleData);
+    return newArticleList.map((article) => {
+      article.createdDate = makeDateFormat(article.createdDate);
+      return article;
+    });
+  }
+  return {...articleData, createdDate: makeDateFormat(articleData.createdDate)};
+};
+
+module.exports = {getReandomInt, shuffle, getNewId, getMostDiscussedPost, formatArticleDate, convertDate};

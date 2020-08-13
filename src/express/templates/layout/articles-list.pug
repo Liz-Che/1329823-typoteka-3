@@ -1,0 +1,17 @@
+mixin articles-list(article)
+
+  li.preview__item
+    ul.preview__breadcrumbs
+      each category in article.category
+        li.preview__breadcrumbs-item
+          a.preview__breadcrumbs-link(href='#')= category
+    .preview__background
+      img.preview__background-image(src=`${article.picture ? article.picture : `img/skyscraper@1x.jpg`}`, width='460', height='240', srcset=`${article.picture ? article.picture : `img/skyscraper@1x.jpg`}`, alt='Фотография небоскреба')
+    time.preview__time(datetime='2019-03-21T20:33')= article.createdDate
+    h3.preview__name
+      a.preview__name-link(href='#')= article.title
+    p.preview__text= article.announce
+    a.preview__comment(href='#')
+      | Комментарии
+      span.preview__cloud
+      b.preview__comment-count= ` ${article.comments.length}`

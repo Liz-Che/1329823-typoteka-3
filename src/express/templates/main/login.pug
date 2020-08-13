@@ -5,7 +5,9 @@ block content
     h1.visually-hidden Регистрация пользователя
     section.modal
       .popup.popup--registration
-        button.popup__button.button.button--popup-close(type='button' aria-label='Закрыть окно') Закрыть окно
+        button.popup__button.button.button--popup-close(type='button', aria-label='Закрыть окно' onclick='history.back()')
+          | Закрыть
+          | окно
         h2.visually-hidden Форма регистрации
         ul.popup__tabs
           li.popup__tab.popup__tab--active.popup__tab--register

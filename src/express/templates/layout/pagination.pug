@@ -1,0 +1,28 @@
+mixin pagination(pagesCount, activePage, template, activeCategory)
+
+  .preview__toggle-wrapper
+    ul.preview__pagination.pagination
+      li
+        if activePage === 1
+          span.pagination__button.button.button--backwards.button--disabled(aria-label="Страница назад") Назад
+        else
+          a.pagination__button.button.button--backwards(
+            href=`${template === `main` ? `/?page=${activePage - 1}` : `/articles/category/${activeCategory.id}/?page=${activePage - 1}`}`
+            aria-label="Страница назад"
+          ) Назад
+      - for (var n = 1; n <= pagesCount; n++) {
+          li(class=`pagination__item ${n === activePage ? `pagination__item--active` : ``}`)
+            if n === activePage
+              span= n
+            else
+              a(href=`${template === `main` ? `/?page=${n}` : `/articles/category/${activeCategory.id}/?page=${n}`}`)= n
+      - }
+      li
+        if pagesCount !== activePage
+          a(
+            class="pagination__button button button--forward"
+            href=`${template === `main` ? `/?page=${activePage + 1}` : `/articles/category/${activeCategory.id}/?page=${activePage + 1}`}`
+            aria-label="Страница вперед"
+          ) Вперед
+        else
+          span(class="pagination__button button button--forward button--disabled" aria-label="Страница вперед") Вперед

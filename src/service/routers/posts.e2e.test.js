@@ -1,126 +1,183 @@
 'use strict';
 
-const fs = require(`fs`).promises;
 const request = require(`supertest`);
-const server = require(`./index`);
-const {MOCK_FILE_NAME} = require(`../../constants`);
+const {HttpCode} = require(`../../constants`);
+const {getServer} = require(`../api/api-server`);
+const {getMockData} = require(`../lib/get-mock-data`);
 
-describe(`Check REST API to work with post`, () => {
-  const FAKE_POST_ID = `OOOOOO`;
-  const FAKE_COMMENT_ID = `OOOOOO`;
-  let mockPost = null;
-  let REAL_POST_ID = null;
-  let REAL_COMMENT_ID = null;
+const newPostData = {
+  title: `Новинки музыки`,
+  announce: `Простые ежедневные упражнения помогут достичь успеха.`,
+  fullText: `Тяжело найти качественную музыку`,
+  createdDate: `2020-05-07 02:23`,
+  category: [`Музыка`],
+  picture: ``,
+  comments: []
+};
 
-  beforeAll(async () => {
-    mockPost = JSON.parse((await fs.readFile(MOCK_FILE_NAME)).toString())[0];
-    REAL_POST_ID = mockPost.id;
-    REAL_COMMENT_ID = mockPost.comments[0].id;
+const updatedPostData = {
+  title: `Новинки автопрома`,
+  announce: `Простые ежедневные упражнения помогут достичь успеха.`,
+  fullText: `Тяжело найти хороший б/у автомобиль`,
+  createdDate: `2020-04-07 20:25`,
+  category: [`Авто`],
+  picture: ``,
+  comments: []
+};
+
+
+const incorrectPostData = {
+  announce: `Простые ежедневные упражнения помогут достичь успеха.`,
+  fullText: `Тяжело найти качественную музыку`,
+  createdDate: `2020-04-17 30:25`,
+  category: [`Тесты`],
+  picture: ``,
+  comments: []
+};
+
+let server;
+let mockData;
+
+beforeAll(async () => {
+  server = await getServer();
+  mockData = await getMockData();
+});
+
+describe(`Check REST API to work with article`, () => {
+
+  describe(`Get all article`, () => {
+
+    test(`Get all article`, async () => {
+      const res = await request(server).get(`/api/articles`);
+      expect(res.statusCode).toBe(HttpCode.OK);
+    });
   });
 
-  test(`Check all post`, async () => {
-    const res = await request(server).get(`/api/articles`);
-    expect(res.statusCode).toBe(200);
+  describe(`Get article by id`, () => {
+
+    test(`Get article by ID`, async () => {
+      const articleId = mockData[0].id;
+      const res = await request(server).get(`/api/articles/${articleId}`);
+      expect(res.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`Check nonexistent article`, async () => {
+      const articleId = `OOOOOO`;
+      const res = await request(server).get(`/api/articles/${articleId}`);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
-  test(`Check post by ID`, async () => {
-    const res = await request(server)
-      .get(`/api/articles/${REAL_POST_ID}`);
-    expect(res.statusCode).toBe(200);
+  describe(`Creating a new article`, () => {
+
+    test(`Creating a new data article`, async () => {
+      const res = await request(server).post(`/api/articles`).send(newPostData);
+      expect(res.statusCode).toBe(HttpCode.CREATED);
+    });
+
+    test(`Creating a new article without`, async () => {
+      const res = await request(server).post(`/api/articles`).send(incorrectPostData);
+      expect(res.statusCode).toBe(400);
+    });
   });
 
-  test(`Check nonexistent post`, async () => {
-    const res = await request(server)
-      .get(`/api/articles/${FAKE_POST_ID}`);
-    expect(res.statusCode).toBe(400);
+  describe(`Get article comments`, () => {
+
+    test(`Getting comments from the article`, async () => {
+      const articleId = mockData[3].id;
+      const res = await request(server).get(`/api/articles/${articleId}/comments`);
+      expect(res.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`Getting comments from nonexistent offer`, async () => {
+      const articleId = `000fff`;
+      const res = await request(server).get(`/api/articles/${articleId}/comments`);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
-  test(`Creating a new post`, async () => {
-    const res = await request(server)
-      .post(`/api/articles`)
-      .send(mockPost);
-    expect(res.statusCode).toBe(200);
+  describe(`Create a new article comment`, () => {
+
+    test(`Creating new comment at article`, async () => {
+      const articleId = mockData[0].id;
+      const commentData = {text: `New test comment`};
+      const res = await request(server).post(`/api/articles/${articleId}/comments`).send(commentData);
+      expect(res.statusCode).toBe(HttpCode.CREATED);
+    });
+
+    test(`Creating new comment without data`, async () => {
+      const articleId = mockData[0].id;
+      const commentData = {message: `New test comment`};
+      const res = await request(server).post(`/api/articles/${articleId}/comments`).send(commentData);
+      expect(res.statusCode).toBe(HttpCode.BED_REQUEST);
+    });
+
+    test(`Creating new comment at nonexistent offer`, async () => {
+      const articleId = `000fff`;
+      const commentData = {text: `New test comment`};
+      const res = await request(server).post(`/api/articles/${articleId}/comments`).send(commentData);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
-  test(`Creating a new post without data`, async () => {
-    const res = await request(server)
-      .post(`/api/articles`)
-      .send({});
-    expect(res.statusCode).toBe(400);
+  describe(`Delete article comment`, () => {
+
+    test(`Delete one comment from the offer`, async () => {
+      const articleId = mockData[0].id;
+      const articleComment = mockData[0].comments[0];
+      const commentId = articleComment.id;
+      const res = await request(server).delete(`/api/articles/${articleId}/comments/${commentId}`);
+      expect(res.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`Delete comment from the nonexistent article`, async () => {
+      const articleId = `000fff`;
+      const commentId = mockData[0].comments[0].id;
+      const res = await request(server).delete(`/api/articles/${articleId}/comments/${commentId}`);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
+
+    test(`Delete nonexistent comment from the offer`, async () => {
+      const articleId = mockData[0].id;
+      const commentId = `oooxxx`;
+      const res = await request(server).delete(`/api/articles/${articleId}/comments/${commentId}`);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
-  test(`Update post`, async () => {
-    const res = await request(server)
-      .get(`/api/articles/${REAL_POST_ID}`);
-    expect(res.statusCode).toBe(200);
+  describe(`Update article by ID`, () => {
+
+    test(`Update article`, async () => {
+      const articleId = mockData[0].id;
+      const res = await request(server).put(`/api/articles/${articleId}`).send(updatedPostData);
+      expect(res.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`Update offer without data`, async () => {
+      const articleId = mockData[0].id;
+      const res = await request(server).put(`/api/articles/${articleId}`).send({});
+      expect(res.statusCode).toBe(400);
+    });
+
+    test(`Update nonexistent offer`, async () => {
+      const articleId = `000fff`;
+      const res = await request(server).put(`/api/articles/${articleId}`).send(newPostData);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
-  test(`Update nonexistent post`, async () => {
-    const res = await request(server)
-      .get(`/api/articles/${FAKE_POST_ID}`);
-    expect(res.statusCode).toBe(400);
+  describe(`Delete article by ID `, () => {
+    test(`Delete article`, async () => {
+      const articleId = mockData[0].id;
+      const res = await request(server).delete(`/api/articles/${articleId}`);
+      expect(res.statusCode).toBe(HttpCode.OK);
+    });
+
+    test(`Delete nonexistent article`, async () => {
+      const articleId = `000fff`;
+      const res = await request(server).delete(`/api/articles/${articleId}`);
+      expect(res.statusCode).toBe(HttpCode.NOT_FOUND);
+    });
   });
 
-  test(`Delete post`, async () => {
-    const res = await request(server)
-      .delete(`/api/articles/${REAL_POST_ID}`);
-    expect(res.statusCode).toBe(200);
-  });
-
-  test(`Delete nonexistent post`, async () => {
-    const res = await request(server)
-      .delete(`/api/articles/${FAKE_POST_ID}`);
-    expect(res.statusCode).toBe(204);
-  });
-
-  test(`Getting comments from the post`, async () => {
-    const res = await request(server)
-      .get(`/api/articles/${REAL_POST_ID}/comments`);
-    expect(res.statusCode).toBe(200);
-  });
-
-  test(`Getting comments from nonexistent post`, async () => {
-    const res = await request(server)
-      .get(`/api/articles/${FAKE_POST_ID}/comments`);
-    expect(res.statusCode).toBe(400);
-  });
-
-  test(`Delete comment from the post`, async () => {
-    const res = await request(server)
-      .delete(`/api/articles/${REAL_POST_ID}/comments/${REAL_COMMENT_ID}`);
-    expect(res.statusCode).toBe(200);
-  });
-
-  test(`Delete comment from the nonexistent post`, async () => {
-    const res = await request(server)
-      .delete(`/api/articles/${FAKE_POST_ID}/comments/${REAL_COMMENT_ID}`);
-    expect(res.statusCode).toBe(400);
-  });
-
-  test(`Delete nonexistent comment from the post`, async () => {
-    const res = await request(server)
-      .delete(`/api/articles/${REAL_POST_ID}/comments/${FAKE_COMMENT_ID}`);
-    expect(res.statusCode).toBe(400);
-  });
-
-  test(`Creating new comment at post`, async () => {
-    const res = await request(server)
-      .put(`/api/articles/${REAL_POST_ID}/comments`)
-      .send({id: 1, text: `New comment text.`});
-    expect(res.statusCode).toBe(200);
-  });
-
-  test(`Creating new comment at nonexistent post`, async () => {
-    const res = await request(server)
-      .put(`/api/articles/${FAKE_POST_ID}/comments`)
-      .send({id: 1, text: `New comment text.`});
-    expect(res.statusCode).toBe(400);
-  });
-
-  test(`Creating new comment without data`, async () => {
-    const res = await request(server)
-      .put(`/api/articles/${REAL_POST_ID}/comments`)
-      .send({});
-    expect(res.statusCode).toBe(400);
-  });
 });

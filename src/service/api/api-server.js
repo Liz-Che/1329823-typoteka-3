@@ -5,6 +5,7 @@ const {getLogger} = require(`../logger`);
 const expressPinoLogger = require(`express-pino-logger`);
 const {HttpCode, API_PREFIX} = require(`../../constants`);
 const {getMockData} = require(`../lib/get-mock-data`);
+const {connectDB} = require(`../db-connect`);
 
 const {getCategoryRouter, getPostRouter, getSearchRouter} = require(`../routers`);
 const {CategoryService, CommentService, SearchService, PostService} = require(`../data-service`);
@@ -14,6 +15,7 @@ const getServer = async () => {
   const server = express();
   const logger = getLogger();
   const mockData = await getMockData();
+  await connectDB();
 
   server.disable(`x-powered-by`);
   server.use(expressPinoLogger({logger}));

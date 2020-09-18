@@ -1,48 +1,107 @@
-doctype html 
-html(lang="ru")
-  include head.pug 
-  body 
-    include header.pug 
-    block content 
-      main
-        section.modal.modal--flex
-          .popup.popup--new-publication.popup--flex
-            .new-publication
-              form(action="/articles/add", method='POST' enctype="multipart/form-data" autocomplete="off")
-                .new-publication__header
-                  h1 Новая публикация
-                  .new-publication__date-form
-                    h3 Дата публикации
-                      .new-publication__date-form-division
-                        .new-publication__date-block
-                          label(for='new-publication-date' aria-label='Календарь')
-                          input#new-publication-date(type='text' name='createdDate' placeholder='21.03.2019')
-                  button.new-publication__button.button.button--colored(type='submit') Опубликовать
-                button.popup__button.button.button--popup-close(type='button' aria-label='Закрыть окно' onclick='history.back()') 
-                  |Закрыть 
-                  |окно
-                .new-publication__form.form
-                  form(action='#' method='get')
-                    .form__wrapper.form__wrapper--intro
-                      .form__field
-                        label
-                          input(type='text' placeholder='Заголовок' required)
-                      .form__field.form__field--post-image
-                        label
-                          input#image-name-field(type='text' placeholder='Фотография' readonly)
-                        .form__image-loader.form__image-loader--publication
-                          label
-                            input.visually-hidden(type='file')
-                            | Обзор
-                      a.new-publication__form-link.button.button--transparent(href='#') Добавить категорию
-                    .form__wrapper.form__wrapper--text
-                      .form__field.form__field--publication-text
-                        label
-                          textarea(rows='1' placeholder='Анонс публикации')
-                      .form__field.form__field--publication-text
-                        label
-                          textarea(rows='1' placeholder='Полный текст публикации')
-          .modal__overlay
+extends ../layout/layout.pug
 
+block content
+ main
+    section.modal.modal--flex
+      .popup.popup--new-publication.popup--flex
+        .new-publication
+          form(
+            action='/articles/add'
+            method='POST'
+            enctype="multipart/form-data"
+            autocomplete="off"
+          )
+            .new-publication__header
+              h1 Новая публикация
+              .new-publication__date-form
+                h3 Дата публикации
+                .new-publication__date-form-division
+                  .new-publication__date-block
+                    label(for='new-publication-date', aria-label='Календарь')
+                    input#new-publication-date(
+                      type='text'
+                      name='createdDate'
+                      value=`${articleData && articleData.createdDate ? articleData.createdDate : new Date().toISOString()}`
+                    )
+                if errors && errors.errorByField.createdDate
+                  p.form__error-message= errors.errorByField.createdDate.msg
+              button.new-publication__button.button.button--colored(type='submit') Опубликовать
+            button.popup__button.button.button--popup-close(type='button', aria-label='Закрыть окно' onclick='location="/"')
+              | Закрыть
+              | окно
+            .new-publication__form.form.form
+              .form__wrapper.form__wrapper--intro
+                .form__field
+                  label
+                    input(
+                      type='text'
+                      name='title'
+                      placeholder='Заголовок'
+                      value=`${articleData && articleData.title ? articleData.title : ''}`
+                    )
+                if errors && errors.errorByField.title
+                  p.form__error-message= errors.errorByField.title.msg
+                .form__field.form__field--post-image
+                  label
+                    input#image-name-field(
+                      type='text'
+                      placeholder='Фотография'
+                      readonly=''
+                      value=`${articleData && articleData.picture ? articleData.picture : ''}`
+                    )
+                  .form__image-loader.form__image-loader--publication
+                    label
+                      input.visually-hidden(type='file' name='picture')
+                      | Обзор
+                if errors && errors.errorByField.picture
+                  p.form__error-message= errors.errorByField.picture.msg
+                .form__field-categories(style=`
+                      display: flex;
+                      flex-wrap: wrap;
+                      padding: 30px 0 0;
+                      justify-content: flex-start;
+                      align-items: center;`
+                    )
+                  each category in categories
+                    .new-publication__checkbox.new-publication__checkbox--auto
+                      input(
+                        type='checkbox'
+                        id=`category-list-${category.id}`
+                        name='categories'
+                        value=category.id
+                        checked=(articleData && articleData.categories ? articleData.categories.includes(String(category.id)) : false)
+                      )
+                      label(for=`category-list-${category.id}`)= category.title
+                  a.new-publication__form-link.button.button--transparent(href='/categories') Добавить категорию
+              if errors && errors.errorByField.categories
+                  p.form__error-message= errors.errorByField.categories.msg
+              .form__wrapper.form__wrapper--text
+                .form__field.form__field--publication-text
+                  label
+                    textarea(
+                      rows='1'
+                      name='announce'
+                      placeholder='Анонс публикации'
+                      required=''
+                    )= `${articleData && articleData.announce ? articleData.announce : ''}`
+                if errors && errors.errorByField.announce
+                  p.form__error-message= errors.errorByField.announce.msg
+                .form__field.form__field--publication-text
+                  label
+                    textarea(
+                      rows='1'
+                      name='fullText'
+                      placeholder='Полный текст публикации'
+                    )= `${articleData && articleData.fullText ? articleData.fullText : ''}`
+                if errors && errors.errorByField.fullText
+                  p.form__error-message= errors.errorByField.fullText.msg
+              if errors && errors.errorsList.length > 0
+                .form__validation-error
+                  p.form__error-message При создании публикации произошли ошибки:
+                  ul.form__errors
+                    each error in errors.errorsList
+                      li.form__error= error
+      .modal__overla
+block scripts
     script(src='js/vendor.js')
     script(src='js/main.js')
